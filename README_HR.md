@@ -6,10 +6,11 @@
 [Ελληνικά](README_GR.md)
 [Deutsch](README_DE.md)
 [繁體中文](README_ZHT.md)
+[Français](README_FR.md)
 
 #### *Umrežavanje iznova*
 
-Cjdns provodi šifriranu IPv6 mrežu koristeći public-key kriptografiju za
+Cjdns je šifrirana IPv6 mreža koja koristi public-key kriptografiju za
 dodjelu adresa i distribuiranu hash tablicu za usmjeravanje. To omogućuje
 gotovo nikakvu mrežnu konfiguraciju i sprječava mnoge sigurnosne i
 skalabilne probleme koje muče trenutne mreže.
@@ -40,7 +41,7 @@ skalabilne probleme koje muče trenutne mreže.
 po cijelom svijetu.
 
 Cjdns je testiran na x86, amd64, ARMv5, ARMv7, MIPS, and PowerPC.
-Stalno se [testira][buildbots] na Linuxu, FreeBSDu, OS X-u, Windowsu and Illumos
+Stalno se [testira][buildbots] na Linuxu, FreeBSDu, macOS-u, Windowsu and Illumos
 systemima.
 
 Protokoli i algoritmi su eksperimentalni i mogli bi se promijeniti.
@@ -130,10 +131,10 @@ it will be downloaded and installed in the source tree.
     sudo yum install install nodejs git
     sudo yum install @development-tools
 
-#### OS X:
+#### macOS:
 
-On OS X, you must install the Command Line Developer Tools. If
-you already have a recent version of Xcode (>= OS X 10.9 and >= Xcode 5.0.1), run the
+On macOS, you must install the Command Line Developer Tools. If
+you already have a recent version of Xcode (>= macOS 10.9 and >= Xcode 5.0.1), run the
 following command:
 
     xcode-select --install
@@ -142,17 +143,17 @@ If Xcode is not installed, you can either install it through the App
 Store and run the command above, or make a free Apple Developer account here:
 [https://developer.apple.com/downloads/index.action](https://developer.apple.com/downloads/index.action).
 Then sign in, search for Command Line Tools, and install the latest package
-compatible with your version of OS X. If you encounter issues, there is a
+compatible with your version of macOS. If you encounter issues, there is a
 thorough [stackoverflow post](https://stackoverflow.com/a/9329325) on installing
 the Command Line Tools.
 
-You must also install git and Node.js. There are a few options. If you use [Homebrew](http://brew.sh/):
+Morate instalirati Git i Node.js. Postoji nekoliko mogućnosti. Ako koristite [Homebrew](http://brew.sh/):
 
     brew install git nodejs
 
-Ako koristite [Macports](https://www.macports.org/):
+Ako koristite [MacPorts](https://www.macports.org/):
 
-    sudo port install git-core nodejs
+    sudo port install git nodejs6
 
 Or if you use neither and would like to install the binaries from their websites:
 doc
@@ -208,12 +209,12 @@ If it says: `cat: /dev/net/tun: No such file or directory`, create it using:
     sudo mknod /dev/net/tun c 10 200 &&
     sudo chmod 0666 /dev/net/tun
 
-Zatim pokrenite `cat /dev/net/tun` opet.
+Zatim opet pokrenite `cat /dev/net/tun`.
 
 If it says: `cat: /dev/net/tun: Permission denied` You're probably using a VPS
 based on the OpenVZ virtualization platform. Ask your provider to enable the
 TUN/TAP device - this is standard protocol so they should know exactly what you
-need. If you're on OS X, don't worry about this step.
+need. If you're on macOS, don't worry about this step.
 
 
 ### 1. Stvorite novu konfiguracijsku datoteku
@@ -335,7 +336,7 @@ A conf file with multiple friend-nodes, setup INbound, should look like:
 Morate dati friend_3 (who is making the INbound connection) sljedeće 4 stvari:
 
 1. Vašu vanjsku IPv4 adresu
-2. The port found in your conf file here:
+2. Port iz konfiguracijske datoteke:
 
                 `// Bind to this port.
                 "bind": "0.0.0.0:yourportnumberishere",`
@@ -368,28 +369,27 @@ Pogledajte [doc/network-services.md](doc/network-services.md) za instrukcije.
 
     sudo ./cjdroute < cjdroute.conf
 
-If you want to have your logs written to a file:
+Ako želite da se logovi zapisuju u datoteku:
 
     sudo ./cjdroute < cjdroute.conf > cjdroute.log
 
-To stop cjdns:
+Za zaustavljanje cjdns-a:
 
     sudo killall cjdroute
 
-If you are having problems use `killall cjdroute` to return to sanity. Use
-`pgrep cjdroute` or `top` to see if it running.
+Ako imate problema koristite `killall cjdroute`.
+Koristite `pgrep cjdroute` ili `top` kako bi ste provjerili radi li cjdns.
 
 **Note:** this starts cjdns as the root user so it can configure your system
 without concern for permissions. To start cjdns as a non-root user, see
 [doc/non-root-user.md](doc/non-root-user.md).
 
 
-### 6. Get in IRC
+### 6. Dođite na IRC
 
-Dobrodošli u mrežu! Sada ste mrežni administrator. There are
-responsibilities which come with being a network administrator which include
-being available in case there is something wrong with your equipment. You should
-stay on [IRC](#community) so that people can reach you.
+Dobrodošli u mrežu! Sada ste mrežni administrator. Kao mrežni
+administrator ste odgovorni za stvari poput kvara opreme.
+Budite na [IRC-u](#community) kako bi vas ljudi mogli kontaktirati.
 
 
 ## Administratorsko sučelje

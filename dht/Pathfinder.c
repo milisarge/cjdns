@@ -124,7 +124,7 @@ static void nodeForAddress(struct PFChan_Node* nodeOut, struct Address* addr, ui
 {
     Bits_memset(nodeOut, 0, PFChan_Node_SIZE);
     nodeOut->version_be = Endian_hostToBigEndian32(addr->protocolVersion);
-    nodeOut->metric_be = Endian_hostToBigEndian32(metric);
+    nodeOut->metric_be = Endian_hostToBigEndian32(metric | 0xffff0000);
     nodeOut->path_be = Endian_hostToBigEndian64(addr->path);
     Bits_memcpy(nodeOut->publicKey, addr->key, 32);
     Bits_memcpy(nodeOut->ip6, addr->ip6.bytes, 16);
@@ -135,6 +135,11 @@ static Iface_DEFUN sendNode(struct Message* msg,
                             uint32_t metric,
                             struct Pathfinder_pvt* pf)
 {
+    if (addr->protocolVersion > 19) {
+        Log_debug(pf->log, "not sending [%s] because version new",
+            Address_toString(addr, msg->alloc)->bytes);
+        return NULL;
+    }
     Message_reset(msg);
     Message_shift(msg, PFChan_Node_SIZE, NULL);
     nodeForAddress((struct PFChan_Node*) msg->bytes, addr, metric);
@@ -278,6 +283,9 @@ static Iface_DEFUN searchReq(struct Message* msg, struct Pathfinder_pvt* pf)
 {
     uint8_t addr[16];
     Message_pop(msg, addr, 16, NULL);
+    Message_pop32(msg, NULL);
+    uint32_t version = Message_pop32(msg, NULL);
+    if (version && version >= 20) { return NULL; }
     Assert_true(!msg->length);
     uint8_t printedAddr[40];
     AddrTools_printIp(printedAddr, addr);
@@ -442,6 +450,8 @@ static Iface_DEFUN incomingFromEventIf(struct Message* msg, struct Iface* eventI
         case PFChan_Core_MSG: return incomingMsg(msg, pf);
         case PFChan_Core_PING: return handlePing(msg, pf);
         case PFChan_Core_PONG: return handlePong(msg, pf);
+        case PFChan_Core_UNSETUP_SESSION:
+        case PFChan_Core_CTRL_MSG: return NULL;
         default:;
     }
     Assert_failure("unexpected event [%d]", ev);
